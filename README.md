@@ -5,7 +5,7 @@ cep-controller
  - rules select / insert / delete
  - generated producer (start/stop)
  - morules database 연동 (rule_info / trigger_items)
- - 172.16.10.44 / cep (변동될 수 있음.)
+
 
 test examples: 
 swagger url : 
