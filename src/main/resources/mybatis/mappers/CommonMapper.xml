@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.sptek.cep.backend.mapper.CommonMapper">
+
+    <select id="getYyyymm" resultType="String">
+        /*MonitorMapper.getYyyymm*/
+        <![CDATA[
+        SELECT DATE_FORMAT(now(), '%Y%m')
+        ]]>
+    </select>
+
+    <select id="allMoRules" resultType="MoRuleVo">
+        /*MonitorMapper.getYyyymm*/
+        <![CDATA[
+        select
+           rule_id as ruleId
+          ,ruleState as  ruleState
+          ,keyNames as keyNames
+          ,aggregateFieldName as aggregateFieldName
+          ,avg_interval as avgInterval
+          ,alertState as alertState
+          ,descrion as descrion
+          ,controlType ascontrolType
+          from test_morules
+        ]]>
+    </select>
+
+    <select id="getYyyymmdd" resultType="String">
+        /*MonitorMapper.getYyyymmdd*/
+        <![CDATA[
+        SELECT DATE_FORMAT(now(), '%Y%m%d')
+        ]]>
+    </select>
+
+    <select id="test" resultType="TestVo">
+        /*test*/
+        <![CDATA[
+        SELECT
+          rule_id AS ID
+         ,groupingKeyNames AS NAME
+          FROM test_rules
+        ]]>
+
+    </select>
+
+    <select id="getRuleId" resultType="int">
+        /*getRuleId*/
+        <![CDATA[
+        SELECT
+          MAX(rule_id) as ruleId
+          FROM rule_info
+        ]]>
+
+    </select>
+
+    <select id="getRule" resultType="MoRuleVo">
+        /*getRuleId*/
+        <![CDATA[
+          select
+           ri.rule_id as ruleId
+          ,ri.rule_state as ruleState
+          ,ri.key_names as keyNames
+          ,ri.aggregate_field_name as aggregateFieldName
+          ,ri.avg_interval as avgInterval
+          ,ri.alert_state as alertState
+          ,ri.descrion as descrion
+          ,ri.control_type as controlType
+          ,ti.event_key as eventKey
+          ,ti.expression as expression
+          from rule_info ri
+              ,trigger_items ti
+         where ri.rule_id = ti.rule_id
+           and ri.use_yn = 'Y'
+           and ri.rule_id = #{id}
+
+        ]]>
+    </select>
+
+    <!--<select id="getRules" resultType="MoRuleVo">-->
+        <!--/*getRuleId*/-->
+        <!--<![CDATA[-->
+          <!--select-->
+           <!--ri.rule_id as ruleId-->
+          <!--,ri.rule_state as ruleState-->
+          <!--,ri.key_names as keyNames-->
+          <!--,ri.aggregate_field_name as aggregateFieldName-->
+          <!--,ri.avg_interval as avgInterval-->
+          <!--,ri.alert_state as alertState-->
+          <!--,ri.descrion as descrion-->
+          <!--,ri.control_type as controlType-->
+          <!--,ti.event_key as eventKey-->
+          <!--,ti.expression as expression-->
+          <!--from rule_info ri-->
+              <!--,trigger_items ti-->
+         <!--where ri.rule_id = ti.rule_id-->
+           <!--and ri.use_yn = 'Y'-->
+            <!--]]>-->
+
+    <!--</select>-->
+
+    <select id="getRules" resultType="MoRuleVo">
+        /*getRuleId*/
+        <![CDATA[
+          select
+           ri.rule_id as ruleId
+          ,ri.rule_state as ruleState
+          ,ri.key_names as keyNames
+          ,ri.aggregate_field_name as aggregateFieldName
+          ,ri.avg_interval as avgInterval
+          ,ri.alert_state as alertState
+          ,ri.descrion as descrion
+          ,ri.control_type as controlType
+          from rule_info ri
+         where ri.use_yn = 'Y'
+            ]]>
+    </select>
+
+    <select id="getTriggers" resultType="TriggerItemVo">
+        /*getRuleId*/
+        <![CDATA[
+          select
+           ti.rule_id as ruleId
+          ,ti.event_key as eventKey
+          ,ti.expression as expression
+          from trigger_items ti
+         where ti.use_yn = 'Y'
+           and ti.rule_id = #{ruleId}
+            ]]>
+    </select>
+
+    <select id="getRulesId" resultType="MoRuleVo">
+        /*getRuleId*/
+        <![CDATA[
+          select
+           ri.rule_id as ruleId
+          ,ri.rule_state as ruleState
+          ,ri.key_names as keyNames
+          ,ri.aggregate_field_name as aggregateFieldName
+          ,ri.avg_interval as avgInterval
+          ,ri.alert_state as alertState
+          ,ri.descrion as descrion
+          ,ri.control_type as controlType
+          ,ti.event_key as eventKey
+          ,ti.expression as expression
+          from rule_info ri
+              ,trigger_items ti
+         where ri.rule_id = ti.rule_id
+           and ri.use_yn = 'Y'
+         group by ri.rule_id
+            ]]>
+
+    </select>
+
+    <update id="insertRule" parameterType="RuleVo">
+        /* CommonMapper.insertRule */
+       <![CDATA[
+        INSERT INTO test_rules (
+               rule_id,
+               ruleState,
+               groupingKeyNames,
+               aggregateFieldName,
+               aggregatorFunctionType,
+               limitOperatorType,
+               limited,
+               windowMinutes,
+               controlType
+            ) VALUES (
+               #{ruleId},
+               #{ruleState},
+               #{groupingKeyNames},
+               #{aggregateFieldName},
+               #{aggregatorFunctionType},
+               #{limitOperatorType},
+               #{limited},
+               #{windowMinutes},
+               #{controlType}
+            )
+        ]]>
+    </update>
+
+    <update id="insertMoRules" parameterType="MoRuleVo">
+        /* CommonMapper.insertMoRules */
+       <![CDATA[
+        INSERT INTO rule_info (
+               rule_state,
+               key_names,
+               aggregate_field_name,
+               avg_interval,
+               alert_state,
+               descrion,
+               control_type,
+               use_yn,
+               created_at,
+               updated_at
+            ) VALUES (
+               #{ruleState},
+               #{keyNames},
+               #{aggregateFieldName},
+               #{avgInterval},
+               #{alertState},
+               #{descrion},
+               #{controlType},
+               #{useYn},
+               NOW(),
+               NOW()
+            )
+        ]]>
+    </update>
+
+    <update id="insertMoTriggers" parameterType="MoRuleTriggerVo">
+        /* CommonMapper.insertMoTriggers */
+       <![CDATA[
+        INSERT INTO trigger_items (
+               rule_id,
+               event_key,
+               expression,
+               use_yn,
+               created_at,
+               updated_at
+            ) VALUES (
+               #{ruleId},
+               #{eventKey},
+               #{expression},
+               #{useYn},
+               NOW(),
+               NOW()
+            )
+        ]]>
+    </update>
+
+    <update id="deleteMoRule" parameterType="MoRuleVo">
+        /* CommonMapper.insertMoRules */
+       <![CDATA[
+        UPDATE rule_info
+           SET rule_state = #{ruleState},
+               use_yn = 'N',
+               updated_at = CURRENT_TIMESTAMP
+         WHERE rule_id = #{ruleId}
+        ]]>
+    </update>
+
+    <update id="deleteMoRuleTrigger" parameterType="MoRuleVo">
+        /* CommonMapper.insertMoRules */
+       <![CDATA[
+        UPDATE trigger_items
+           SET use_yn = 'N'
+              ,updated_at = CURRENT_TIMESTAMP
+         WHERE rule_id = #{ruleId}
+        ]]>
+    </update>
+
+</mapper>

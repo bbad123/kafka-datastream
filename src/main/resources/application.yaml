@@ -1,0 +1,59 @@
+server:
+  port: 5566
+
+security.auth.enabled: false
+
+transactionsRateDisplayLimit: 50
+
+kafka:
+  topic:
+    transactions: livetransactions
+    rules: rules
+    alerts: alerts
+    latency: latency
+    current-rules: current-rules
+    morules: rulesMo
+  listeners:
+    transactions.id: transactions-listener
+
+  bootstrap-servers: 127.0.0.1:9092
+
+web-socket:
+  topic:
+    transactions: /topic/transactions
+    alerts: /topic/alerts
+    latency: /topic/latency
+
+management.endpoints.web.exposure.include: mappings, loggers
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  h2.console.enabled: true
+  thymeleaf.cache: false
+  autoconfigure.exclude: org.springframework.boot.autoconfigure.security.SecurityAutoConfiguration
+  kafka:
+    producer:
+      bootstrap-servers: localhost:9092
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+  datasource:
+    url: jdbc:log4jdbc:mysql://172.16.10.44/cep?autoReconnect=true&useSSL=false
+    username: root
+    password: Sptek12#$
+    driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+  profiles:
+    active:
+  #    url: jdbc:mysql://172.16.10.44/cep?autoReconnect=true&useSSL=false
+  #    driver-class-name: com.mysql.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+
+logging:
+  level:
+    org.hibernate.type: trace
+mybatis:
+  mapper-locations: mybatis/mappers/**/*.xml
+  type-aliases-package: kr.co.sptek.cep.backend.vo
