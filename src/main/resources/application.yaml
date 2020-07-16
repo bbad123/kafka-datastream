@@ -38,8 +38,8 @@ spring:
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
   datasource:
     url: jdbc:log4jdbc:mysql://172.16.10.44/cep?autoReconnect=true&useSSL=false
-    username: root
-    password: Sptek12#$
+    username: 
+    password: 
     driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
   profiles:
     active:
